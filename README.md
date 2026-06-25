@@ -95,6 +95,21 @@ $this->app->tag([MyAuthStatusProvider::class], 'mcp-ops.auth-providers');
 | `mcp-ops.remediation.google`     | `MCP_OPS_GOOGLE_REMEDIATION`     | `php artisan google:auth` |
 | `mcp-ops.remediation.notebooklm` | `MCP_OPS_NOTEBOOKLM_REMEDIATION` | `nlm login`               |
 
+## Docker
+
+Image: `ghcr.io/eloquage/laravel-mcp-ops` (published on tag push).
+
+```json
+{
+    "mcpServers": {
+        "ops": {
+            "command": "docker",
+            "args": ["run", "-i", "--rm", "ghcr.io/eloquage/laravel-mcp-ops:latest"]
+        }
+    }
+}
+```
+
 ## Testing
 
 ```bash
