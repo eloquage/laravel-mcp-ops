@@ -7,6 +7,7 @@ namespace Eloquage\LaravelMcpOps;
 use Eloquage\LaravelGoogleWorkspace\Services\Google\GoogleOAuthService;
 use Eloquage\LaravelMcpOps\AuthStatus\GoogleAuthStatusProvider;
 use Eloquage\LaravelMcpOps\AuthStatus\NotebookLmAuthStatusProvider;
+use Eloquage\LaravelMcpOps\AuthStatus\VectorSearchAuthStatusProvider;
 use Eloquage\LaravelMcpOps\Contracts\HealthCheckRunner;
 use Eloquage\LaravelMcpOps\Health\SpatieHealthCheckRunner;
 use Eloquage\LaravelMcpOps\Mcp\Servers\OpsServer;
@@ -74,6 +75,16 @@ class LaravelMcpOpsServiceProvider extends PackageServiceProvider
             });
 
             $this->app->tag([NotebookLmAuthStatusProvider::class], 'mcp-ops.auth-providers');
+        }
+
+        if (class_exists(\Eloquage\LaravelVectorSearch\Managers\EmbeddingProviderManager::class)) {
+            $this->app->singleton(VectorSearchAuthStatusProvider::class, function (Container $app): VectorSearchAuthStatusProvider {
+                return new VectorSearchAuthStatusProvider(
+                    $app->make(\Eloquage\LaravelVectorSearch\Managers\EmbeddingProviderManager::class),
+                );
+            });
+
+            $this->app->tag([VectorSearchAuthStatusProvider::class], 'mcp-ops.auth-providers');
         }
     }
 

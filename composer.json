@@ -27,6 +27,8 @@
     "suggest": {
         "eloquage/laravel-google-workspace": "Google OAuth integration for auth_status",
         "eloquage/laravel-notebooklm": "NotebookLM CLI integration for auth_status",
+        "eloquage/laravel-vector-search": "Vector search embedding status for auth_status",
+        "eloquage/laravel-vector-search-ai": "Vector search MCP server and embedding bridge",
         "spatie/laravel-health": "Expose registered Spatie health checks via health_check MCP tool"
     },
     "require-dev": {
