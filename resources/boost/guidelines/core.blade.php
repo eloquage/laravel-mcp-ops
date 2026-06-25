@@ -1,25 +1,23 @@
 # Laravel MCP Ops
 
-Aggregate MCP server for infrastructure health and auth status.
+Aggregate MCP server for infrastructure health and integration auth status.
 
-## Registration
+## MCP tools
 
-Auto-registered as local handle `ops` (configurable via `mcp-ops.mcp.local_handle`).
+| Tool | Contract |
+|------|----------|
+| `health_check` | `HealthCheckRunner` |
+| `auth_status` | Tagged `mcp-ops.auth-providers` |
 
-```bash
-php artisan mcp:start ops
-```
+## Spatie Health bridge
 
-## Tools
+When `spatie/laravel-health` is installed and `mcp-ops.health.auto_register_spatie` is `true`, `SpatieHealthCheckRunner` is bound automatically. Pair with `eloquage/laravel-document-archive-mcp` to surface archive pipeline checks.
 
-- `health_check` — requires a host-bound `Eloquage\LaravelMcpOps\Contracts\HealthCheckRunner`
-- `auth_status` — aggregates installed `AuthStatusProvider` implementations
+Override with a custom `HealthCheckRunner` binding in the host app.
 
-## Optional integrations
+## Auth providers
 
-- `eloquage/laravel-google-workspace` — Google OAuth section in `auth_status`
-- `eloquage/laravel-notebooklm` — NotebookLM CLI section in `auth_status`
+Optional packages register tagged providers automatically:
 
-## Extending auth status
-
-Tag custom providers with `mcp-ops.auth-providers` so `McpAuthStatusService` picks them up.
+- `eloquage/laravel-google-workspace` → `GoogleAuthStatusProvider`
+- `eloquage/laravel-notebooklm` → `NotebookLmAuthStatusProvider`

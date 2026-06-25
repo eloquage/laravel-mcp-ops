@@ -26,13 +26,14 @@
     },
     "suggest": {
         "eloquage/laravel-google-workspace": "Google OAuth integration for auth_status",
-        "eloquage/laravel-notebooklm": "NotebookLM CLI integration for auth_status"
+        "eloquage/laravel-notebooklm": "NotebookLM CLI integration for auth_status",
+        "spatie/laravel-health": "Expose registered Spatie health checks via health_check MCP tool"
     },
     "require-dev": {
         "eloquage/laravel-google-workspace": "@dev",
         "eloquage/laravel-notebooklm": "@dev",
-        "laravel/pint": "^1.14",
         "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.14",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.8",
         "orchestra/testbench": "^11.0.0||^10.0.0||^9.0.0",
@@ -41,7 +42,8 @@
         "pestphp/pest-plugin-laravel": "^4.0",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpstan/phpstan-phpunit": "^2.0"
+        "phpstan/phpstan-phpunit": "^2.0",
+        "spatie/laravel-health": "^1.34"
     },
     "autoload": {
         "psr-4": {

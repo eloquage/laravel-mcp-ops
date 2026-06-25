@@ -12,4 +12,7 @@ return [
         'google' => env('MCP_OPS_GOOGLE_REMEDIATION', 'php artisan google:auth'),
         'notebooklm' => env('MCP_OPS_NOTEBOOKLM_REMEDIATION', 'nlm login'),
     ],
+    'health' => [
+        'auto_register_spatie' => env('MCP_OPS_HEALTH_AUTO_REGISTER_SPATIE', true),
+    ],
 ];

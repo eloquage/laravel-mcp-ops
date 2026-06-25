@@ -10,6 +10,7 @@ use Eloquage\LaravelNotebookLm\LaravelNotebookLmServiceProvider;
 use Illuminate\Encryption\EncryptionServiceProvider;
 use Laravel\Mcp\Server\McpServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\Health\HealthServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -18,6 +19,7 @@ class TestCase extends Orchestra
         return [
             McpServiceProvider::class,
             EncryptionServiceProvider::class,
+            HealthServiceProvider::class,
             LaravelGoogleWorkspaceServiceProvider::class,
             LaravelNotebookLmServiceProvider::class,
             LaravelMcpOpsServiceProvider::class,
@@ -36,5 +38,7 @@ class TestCase extends Orchestra
             'google' => 'php artisan google:auth',
             'notebooklm' => 'nlm login',
         ]);
+
+        $app['config']->set('mcp-ops.health.auto_register_spatie', false);
     }
 }

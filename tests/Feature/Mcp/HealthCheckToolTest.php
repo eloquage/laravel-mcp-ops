@@ -35,6 +35,8 @@ it('returns health check results as json when runner is bound', function () {
 });
 
 it('returns error when health check runner is not bound', function () {
+    app()->offsetUnset(HealthCheckRunner::class);
+
     $response = app(HealthCheckTool::class)->handle(
         new Request([]),
         app(Container::class),

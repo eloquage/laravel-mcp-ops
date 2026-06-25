@@ -7,11 +7,14 @@ namespace Eloquage\LaravelMcpOps;
 use Eloquage\LaravelGoogleWorkspace\Services\Google\GoogleOAuthService;
 use Eloquage\LaravelMcpOps\AuthStatus\GoogleAuthStatusProvider;
 use Eloquage\LaravelMcpOps\AuthStatus\NotebookLmAuthStatusProvider;
+use Eloquage\LaravelMcpOps\Contracts\HealthCheckRunner;
+use Eloquage\LaravelMcpOps\Health\SpatieHealthCheckRunner;
 use Eloquage\LaravelMcpOps\Mcp\Servers\OpsServer;
 use Eloquage\LaravelMcpOps\Services\McpAuthStatusService;
 use Eloquage\LaravelNotebookLm\NotebookLmService;
 use Illuminate\Contracts\Container\Container;
 use Laravel\Mcp\Facades\Mcp;
+use Spatie\Health\Health;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -27,6 +30,7 @@ class LaravelMcpOpsServiceProvider extends PackageServiceProvider
     public function packageRegistered(): void
     {
         $this->registerAuthStatusProviders();
+        $this->registerHealthCheckRunner();
 
         $this->app->singleton(McpAuthStatusService::class, function (Container $app): McpAuthStatusService {
             return new McpAuthStatusService($app->tagged('mcp-ops.auth-providers'));
@@ -71,5 +75,22 @@ class LaravelMcpOpsServiceProvider extends PackageServiceProvider
 
             $this->app->tag([NotebookLmAuthStatusProvider::class], 'mcp-ops.auth-providers');
         }
+    }
+
+    private function registerHealthCheckRunner(): void
+    {
+        if (! config('mcp-ops.health.auto_register_spatie', true)) {
+            return;
+        }
+
+        if (! class_exists(Health::class)) {
+            return;
+        }
+
+        if ($this->app->bound(HealthCheckRunner::class)) {
+            return;
+        }
+
+        $this->app->singleton(HealthCheckRunner::class, SpatieHealthCheckRunner::class);
     }
 }

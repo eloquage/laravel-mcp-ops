@@ -67,7 +67,7 @@ Install the packages you need; their auth providers register automatically.
 
 ## Health checks
 
-`health_check` delegates to `Eloquage\LaravelMcpOps\Contracts\HealthCheckRunner`. Bind an implementation in your app:
+When `spatie/laravel-health` is installed and `mcp-ops.health.auto_register_spatie` is `true` (default), this package auto-binds `SpatieHealthCheckRunner` as `HealthCheckRunner`. Override by binding your own implementation:
 
 ```php
 use Eloquage\LaravelMcpOps\Contracts\HealthCheckRunner;
@@ -75,7 +75,13 @@ use Eloquage\LaravelMcpOps\Contracts\HealthCheckRunner;
 $this->app->bind(HealthCheckRunner::class, YourHealthCheckRunner::class);
 ```
 
-When no runner is bound, the tool returns a JSON error explaining how to register one.
+Pair with `eloquage/laravel-document-archive-mcp` to register archive pipeline checks (`ArchiveDisksCheck`, `VectorIndexCheck`, `QueueConnectionCheck`) on the same Spatie Health registry.
+
+| Key                                   | Env                                   | Default |
+| ------------------------------------- | ------------------------------------- | ------- |
+| `mcp-ops.health.auto_register_spatie` | `MCP_OPS_HEALTH_AUTO_REGISTER_SPATIE` | `true`  |
+
+When no runner is bound and auto-register is disabled, `health_check` returns a JSON error explaining how to register one.
 
 ## Custom auth providers
 
@@ -88,12 +94,13 @@ $this->app->tag([MyAuthStatusProvider::class], 'mcp-ops.auth-providers');
 
 ## Configuration
 
-| Key                              | Env                              | Default                   |
-| -------------------------------- | -------------------------------- | ------------------------- |
-| `mcp-ops.mcp.local_handle`       | `MCP_OPS_LOCAL_HANDLE`           | `ops`                     |
-| `mcp-ops.mcp.web_path`           | `MCP_OPS_WEB_PATH`               | `/mcp/ops`                |
-| `mcp-ops.remediation.google`     | `MCP_OPS_GOOGLE_REMEDIATION`     | `php artisan google:auth` |
-| `mcp-ops.remediation.notebooklm` | `MCP_OPS_NOTEBOOKLM_REMEDIATION` | `nlm login`               |
+| Key                                   | Env                                   | Default                   |
+| ------------------------------------- | ------------------------------------- | ------------------------- |
+| `mcp-ops.mcp.local_handle`            | `MCP_OPS_LOCAL_HANDLE`                | `ops`                     |
+| `mcp-ops.mcp.web_path`                | `MCP_OPS_WEB_PATH`                    | `/mcp/ops`                |
+| `mcp-ops.remediation.google`          | `MCP_OPS_GOOGLE_REMEDIATION`          | `php artisan google:auth` |
+| `mcp-ops.remediation.notebooklm`      | `MCP_OPS_NOTEBOOKLM_REMEDIATION`      | `nlm login`               |
+| `mcp-ops.health.auto_register_spatie` | `MCP_OPS_HEALTH_AUTO_REGISTER_SPATIE` | `true`                    |
 
 ## Docker
 
@@ -104,7 +111,12 @@ Image: `ghcr.io/eloquage/laravel-mcp-ops` (published on tag push).
     "mcpServers": {
         "ops": {
             "command": "docker",
-            "args": ["run", "-i", "--rm", "ghcr.io/eloquage/laravel-mcp-ops:latest"]
+            "args": [
+                "run",
+                "-i",
+                "--rm",
+                "ghcr.io/eloquage/laravel-mcp-ops:latest"
+            ]
         }
     }
 }
