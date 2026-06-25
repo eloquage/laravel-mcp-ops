@@ -13,6 +13,7 @@ use Eloquage\LaravelMcpOps\Health\SpatieHealthCheckRunner;
 use Eloquage\LaravelMcpOps\Mcp\Servers\OpsServer;
 use Eloquage\LaravelMcpOps\Services\McpAuthStatusService;
 use Eloquage\LaravelNotebookLm\NotebookLmService;
+use Eloquage\LaravelVectorSearch\Managers\EmbeddingProviderManager;
 use Illuminate\Contracts\Container\Container;
 use Laravel\Mcp\Facades\Mcp;
 use Spatie\Health\Health;
@@ -77,10 +78,10 @@ class LaravelMcpOpsServiceProvider extends PackageServiceProvider
             $this->app->tag([NotebookLmAuthStatusProvider::class], 'mcp-ops.auth-providers');
         }
 
-        if (class_exists(\Eloquage\LaravelVectorSearch\Managers\EmbeddingProviderManager::class)) {
+        if (class_exists(EmbeddingProviderManager::class)) {
             $this->app->singleton(VectorSearchAuthStatusProvider::class, function (Container $app): VectorSearchAuthStatusProvider {
                 return new VectorSearchAuthStatusProvider(
-                    $app->make(\Eloquage\LaravelVectorSearch\Managers\EmbeddingProviderManager::class),
+                    $app->make(EmbeddingProviderManager::class),
                 );
             });
 
