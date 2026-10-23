@@ -1,73 +1,36 @@
 # Laravel MCP Ops
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/eloquage/laravel-mcp-ops.svg?style=flat-square)](https://packagist.org/packages/eloquage/laravel-mcp-ops)
-[![GitHub Tests Action Status](https://github.com/eloquage/laravel-mcp-ops/actions/workflows/run-tests.yml/badge.svg)](https://github.com/eloquage/laravel-mcp-ops/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/eloquage/laravel-mcp-ops.svg?style=flat-square)](https://packagist.org/packages/eloquage/laravel-mcp-ops)
+![Laravel MCP Ops package banner](art/banner.png)
 
-Aggregate MCP ops server for infrastructure health checks and auth status across installed integrations.
+An aggregate Laravel MCP server for infrastructure health and authentication status across installed integrations.
 
-## Requirements
+[![Tests](https://github.com/eloquage/laravel-mcp-ops/actions/workflows/run-tests.yml/badge.svg)](https://github.com/eloquage/laravel-mcp-ops/actions/workflows/run-tests.yml)
+[![Latest Version](https://img.shields.io/packagist/v/eloquage/laravel-mcp-ops)](https://packagist.org/packages/eloquage/laravel-mcp-ops)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
-- PHP 8.4+
-- `laravel/mcp` ^0.8
+Requires PHP 8.4+, Laravel 11, 12, or 13, and `laravel/mcp` 0.9 or later.
 
-## Installation
+## Install
 
 ```bash
 composer require eloquage/laravel-mcp-ops
+php artisan vendor:publish --tag=mcp-ops-config
 ```
 
-Publish config (optional):
-
-```bash
-php artisan vendor:publish --tag=laravel-mcp-ops-config
-```
-
-## MCP registration
-
-This package **auto-registers** MCP routes when `laravel/mcp` is installed:
-
-- Local handle: `ops` (configurable via `MCP_OPS_LOCAL_HANDLE`)
-- Web path: `/mcp/ops` (configurable via `MCP_OPS_WEB_PATH`)
-
-Start the local MCP server:
+The package registers a local MCP server named `ops` and a web endpoint at `/mcp/ops`. Start the local server with:
 
 ```bash
 php artisan mcp:start ops
 ```
 
-### IDE config (`.cursor/mcp.json`)
+## Tools
 
-```json
-{
-    "mcpServers": {
-        "ops": {
-            "command": "php",
-            "args": ["artisan", "mcp:start", "ops"]
-        }
-    }
-}
-```
+| Tool | What it reports |
+| --- | --- |
+| `health_check` | Infrastructure checks from the registered `HealthCheckRunner`. |
+| `auth_status` | Authentication health from installed `AuthStatusProvider` integrations. |
 
-## MCP tools
-
-| Tool           | Description                                                               |
-| -------------- | ------------------------------------------------------------------------- |
-| `health_check` | Infrastructure health when a `HealthCheckRunner` is bound in the host app |
-| `auth_status`  | Aggregated OAuth / CLI auth health across installed `AuthStatusProvider`s |
-
-## Optional integrations
-
-| Package                             | `auth_status` section |
-| ----------------------------------- | --------------------- |
-| `eloquage/laravel-google-workspace` | Google OAuth          |
-| `eloquage/laravel-notebooklm`       | NotebookLM CLI        |
-
-Install the packages you need; their auth providers register automatically.
-
-## Health checks
-
-When `spatie/laravel-health` is installed and `mcp-ops.health.auto_register_spatie` is `true` (default), this package auto-binds `SpatieHealthCheckRunner` as `HealthCheckRunner`. Override by binding your own implementation:
+When `spatie/laravel-health` is installed, the package registers its health runner by default. You can bind your own implementation:
 
 ```php
 use Eloquage\LaravelMcpOps\Contracts\HealthCheckRunner;
@@ -75,17 +38,7 @@ use Eloquage\LaravelMcpOps\Contracts\HealthCheckRunner;
 $this->app->bind(HealthCheckRunner::class, YourHealthCheckRunner::class);
 ```
 
-Pair with `eloquage/laravel-document-archive-mcp` to register archive pipeline checks (`ArchiveDisksCheck`, `VectorIndexCheck`, `QueueConnectionCheck`) on the same Spatie Health registry.
-
-| Key                                   | Env                                   | Default |
-| ------------------------------------- | ------------------------------------- | ------- |
-| `mcp-ops.health.auto_register_spatie` | `MCP_OPS_HEALTH_AUTO_REGISTER_SPATIE` | `true`  |
-
-When no runner is bound and auto-register is disabled, `health_check` returns a JSON error explaining how to register one.
-
-## Custom auth providers
-
-Implement `Eloquage\LaravelMcpOps\Contracts\AuthStatusProvider` and tag it in your service provider:
+Optional integrations register their auth providers automatically when installed, including Google Workspace, NotebookLM, and Vector Search. You can add a custom provider by implementing `AuthStatusProvider` and tagging it:
 
 ```php
 $this->app->singleton(MyAuthStatusProvider::class);
@@ -94,43 +47,22 @@ $this->app->tag([MyAuthStatusProvider::class], 'mcp-ops.auth-providers');
 
 ## Configuration
 
-| Key                                   | Env                                   | Default                   |
-| ------------------------------------- | ------------------------------------- | ------------------------- |
-| `mcp-ops.mcp.local_handle`            | `MCP_OPS_LOCAL_HANDLE`                | `ops`                     |
-| `mcp-ops.mcp.web_path`                | `MCP_OPS_WEB_PATH`                    | `/mcp/ops`                |
-| `mcp-ops.remediation.google`          | `MCP_OPS_GOOGLE_REMEDIATION`          | `php artisan google:auth` |
-| `mcp-ops.remediation.notebooklm`      | `MCP_OPS_NOTEBOOKLM_REMEDIATION`      | `nlm login`               |
-| `mcp-ops.health.auto_register_spatie` | `MCP_OPS_HEALTH_AUTO_REGISTER_SPATIE` | `true`                    |
+| Setting | Environment variable | Default |
+| --- | --- | --- |
+| Local MCP handle | `MCP_OPS_LOCAL_HANDLE` | `ops` |
+| Web MCP path | `MCP_OPS_WEB_PATH` | `/mcp/ops` |
+| Auto-register Spatie health | `MCP_OPS_HEALTH_AUTO_REGISTER_SPATIE` | `true` |
+| Google auth remediation | `MCP_OPS_GOOGLE_REMEDIATION` | `php artisan google:auth` |
+| NotebookLM remediation | `MCP_OPS_NOTEBOOKLM_REMEDIATION` | `nlm login` |
 
-## Docker
-
-Image: `ghcr.io/eloquage/laravel-mcp-ops` (published on tag push).
-
-```json
-{
-    "mcpServers": {
-        "ops": {
-            "command": "docker",
-            "args": [
-                "run",
-                "-i",
-                "--rm",
-                "ghcr.io/eloquage/laravel-mcp-ops:latest"
-            ]
-        }
-    }
-}
-```
-
-## Testing
+## Tests
 
 ```bash
+composer install
 composer test
+composer analyse
+composer format -- --test
 ```
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
