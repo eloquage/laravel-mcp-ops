@@ -32,8 +32,6 @@
         "spatie/laravel-health": "Expose registered Spatie health checks via health_check MCP tool"
     },
     "require-dev": {
-        "eloquage/laravel-google-workspace": "@dev",
-        "eloquage/laravel-notebooklm": "@dev",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.14",
         "mockery/mockery": "^1.6",
@@ -58,22 +56,6 @@
             "Workbench\\App\\": "workbench/app/"
         }
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../laravel-google-workspace",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "../laravel-notebooklm",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
@@ -96,6 +78,6 @@
             ]
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }

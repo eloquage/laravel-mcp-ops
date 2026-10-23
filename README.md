@@ -8,7 +8,7 @@ An aggregate Laravel MCP server for infrastructure health and authentication sta
 [![Latest Version](https://img.shields.io/packagist/v/eloquage/laravel-mcp-ops)](https://packagist.org/packages/eloquage/laravel-mcp-ops)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
-Requires PHP 8.4+, Laravel 11, 12, or 13, and `laravel/mcp` 0.9 or later.
+Requires PHP 8.4+, Laravel 11, 12, or 13, and `laravel/mcp` `^0.9`.
 
 ## Install
 
