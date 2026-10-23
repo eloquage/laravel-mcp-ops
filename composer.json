@@ -1,6 +1,6 @@
 {
     "name": "eloquage/laravel-mcp-ops",
-    "description": "Aggregate MCP ops server — auth status and pluggable health checks",
+    "description": "Aggregate MCP ops server \u2014 auth status and pluggable health checks",
     "keywords": [
         "eloquage",
         "laravel",
@@ -21,7 +21,7 @@
         "php": "^8.4",
         "illuminate/contracts": "^11.0||^12.0||^13.0",
         "illuminate/support": "^11.0||^12.0||^13.0",
-        "laravel/mcp": "^0.8",
+        "laravel/mcp": "^0.9",
         "spatie/laravel-package-tools": "^1.16"
     },
     "suggest": {
@@ -32,8 +32,6 @@
         "spatie/laravel-health": "Expose registered Spatie health checks via health_check MCP tool"
     },
     "require-dev": {
-        "eloquage/laravel-google-workspace": "@dev",
-        "eloquage/laravel-notebooklm": "@dev",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.14",
         "mockery/mockery": "^1.6",
@@ -58,26 +56,10 @@
             "Workbench\\App\\": "workbench/app/"
         }
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../laravel-google-workspace",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "../laravel-notebooklm",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "analyse": "vendor/bin/phpstan analyse",
+        "analyse": "vendor/bin/phpstan analyse --memory-limit=512M",
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "format": "vendor/bin/pint"
@@ -96,6 +78,6 @@
             ]
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
