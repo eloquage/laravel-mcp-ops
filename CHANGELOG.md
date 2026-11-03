@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-mcp-ops` will be documented in this file.
 
+## v1.0.5 - 2026-11-03
+
+- Refresh the package changelog.
+
 ## v1.0.4 - 2026-10-23
 
 ### Release readiness
